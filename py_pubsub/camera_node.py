@@ -6,7 +6,9 @@ import cv2 # OpenCV library
 
  
 class CameraNode(Node):
+
   def __init__(self):
+
     super().__init__('camera_node')
       
     self.publisher_ = self.create_publisher(Image, 'video_frames', 10)
@@ -18,6 +20,7 @@ class CameraNode(Node):
     self.br = CvBridge()
    
   def timer_callback(self):
+
     ret, frame = self.cap.read()
           
     if ret == True:
@@ -25,8 +28,9 @@ class CameraNode(Node):
 
     self.get_logger().info('Publishing video frame')
   
-def main(args=None):
-  rclpy.init(args=args)
+def main(args = None):
+
+  rclpy.init(args = args)
   image_publisher = CameraNode()
   rclpy.spin(image_publisher)
   image_publisher.destroy_node()

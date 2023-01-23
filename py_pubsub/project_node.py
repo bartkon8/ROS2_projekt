@@ -11,6 +11,7 @@ import argparse
 
 
 ARUCO_DICT = {
+
 	"DICT_4X4_50": cv2.aruco.DICT_4X4_50,
 	"DICT_4X4_100": cv2.aruco.DICT_4X4_100,
 	"DICT_4X4_250": cv2.aruco.DICT_4X4_250,
@@ -32,11 +33,14 @@ ARUCO_DICT = {
 	"DICT_APRILTAG_25h9": cv2.aruco.DICT_APRILTAG_25h9,
 	"DICT_APRILTAG_36h10": cv2.aruco.DICT_APRILTAG_36h10,
 	"DICT_APRILTAG_36h11": cv2.aruco.DICT_APRILTAG_36h11
+
 }
 
 
 class ProjectNode(Node):
+
 	def __init__(self):
+
 		super().__init__('Project_Node')
 		self.br = CvBridge()
 		self.control_publisher_ = self.create_publisher(Twist, 'cmd_vel', 10)
@@ -45,7 +49,7 @@ class ProjectNode(Node):
 		self.camera_subscriber_ = self.create_subscription(Image, 'video_frames',self.camera_callback, 10)
 		self.get_logger().info("Control Node has been started")
 		self.arucoParams = cv2.aruco.DetectorParameters_create()
-		self.aruco_type = "DICT_4X4_100"
+		self.aruco_type = "DICT_5X5_50"
 		self.arucoDict = cv2.aruco.Dictionary_get(ARUCO_DICT[self.aruco_type])
 		self.cY = 0.0
 
@@ -58,6 +62,7 @@ class ProjectNode(Node):
 
 			for (markerCorner, markerID) in zip(corners, ids):
 				print(markerCorner)
+
 				corners = markerCorner.reshape((4, 2))
 				print(corners)
 				(topLeft, topRight, bottomRight, bottomLeft) = corners
@@ -92,6 +97,7 @@ class ProjectNode(Node):
 		return image
 
 	def camera_callback(self, video):
+
 		current_frame = self.br.imgmsg_to_cv2(video)
 		h, w, _ = current_frame.shape
 		width = 1000
@@ -105,9 +111,11 @@ class ProjectNode(Node):
 
 
 	def sub_callback(self, message):
+
 		self.get_logger().info(f"X: {message.linear.x}\nY: {message.linear.y}\nZ: {message.linear.z}")
 
 def main():
+
 	rclpy.init()
 	node = ProjectNode()
 	rclpy.spin(node)
